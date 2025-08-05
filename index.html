@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<!--Enjoy the Reef Tracker , Reef Power-->
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>REEF Portfolio Tracker</title>
   <style>
     body {
@@ -18,42 +18,44 @@
     }
 
     .container {
-      background-color: rgba(0, 0, 0, 0.5);
-      padding: 30px;
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
       border-radius: 12px;
-      width: 90%;
-      max-width: 600px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+      width: 95%;
+      max-width: 550px;
+      box-sizing: border-box;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
       color: #ffffff;
+      margin-bottom: 20px;
     }
 
     label {
       display: block;
       margin-top: 15px;
-      color: #ffe6fa;
       font-weight: bold;
+      color: #ffe6fa;
     }
 
     input {
       width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      border: none;
-      border-radius: 5px;
+      padding: 10px;
       font-size: 1em;
-      background-color: #dddddd;
+      border-radius: 6px;
+      border: none;
+      margin-top: 6px;
+      background: #eeeeee;
       color: #333;
+      box-sizing: border-box;
     }
 
     button {
-      margin-top: 20px;
-      padding: 10px 20px;
       width: 100%;
+      margin-top: 20px;
+      padding: 12px;
       font-size: 1em;
       background-color: #800080;
       color: white;
@@ -88,29 +90,24 @@
   <div class="container">
     <h1>REEF Portfolio Tracker</h1>
 
-    <label>
-      REEF Price (USD):
-      <input type="number" step="0.00001" id="reefPrice" value="0.00025">
+    <label>REEF Price (USD):
+      <input type="number" step="0.00001" id="reefPrice" placeholder="Enter REEF price" />
     </label>
 
-    <label>
-      Daily REEF Rewards:
-      <input type="number" id="dailyRewards" value="60000">
+    <label>Daily REEF Rewards:
+      <input type="number" id="dailyRewards" placeholder="Enter daily rewards" />
     </label>
 
-    <label>
-      Main REEF Holding:
-      <input type="number" id="mainHolding" value="30000000">
+    <label>Main REEF Holding:
+      <input type="number" id="mainHolding" placeholder="Enter REEF holding amount" />
     </label>
 
-    <label>
-      Staked REEF:
-      <input type="number" id="stakedAmount" value="1000000">
+    <label>Staked REEF:
+      <input type="number" id="stakedAmount" placeholder="Enter staked REEF" />
     </label>
 
-    <label>
-      Staking APR (%):
-      <input type="number" step="0.01" id="stakingApr" value="12.5">
+    <label>Staking APR (%):
+      <input type="number" step="0.01" id="stakingApr" placeholder="Enter staking APR" />
     </label>
 
     <button onclick="calculate()">Calculate</button>
@@ -133,6 +130,11 @@
       const staked = parseFloat(document.getElementById("stakedAmount").value) || 0;
       const apr = parseFloat(document.getElementById("stakingApr").value) || 0;
 
+      if (!price || !holding) {
+        document.getElementById("results").innerHTML = "<p>Please enter at least REEF price and holdings to proceed.</p>";
+        return;
+      }
+
       const monthly = daily * 30;
       const yearly = daily * 365;
       const dailyValue = daily * price;
@@ -149,7 +151,7 @@
       const yearlyStakeUSD = yearlyStakeTokens * price;
 
       const html = `
-        <h2>📈 Rewards </h2>
+        <h2>📈 Rewards</h2>
         <p>Daily: <span class="value">${formatUSD(dailyValue)}</span></p>
         <p>Monthly: <span class="value">${formatUSD(monthlyValue)}</span></p>
         <p>Yearly: <span class="value">${formatUSD(yearlyValue)}</span></p>
@@ -168,8 +170,6 @@
 
       document.getElementById("results").innerHTML = html;
     }
-
-    calculate(); // Run on page load
   </script>
 </body>
 </html>
