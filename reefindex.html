@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!--Enjoy the Reef Tracker , Reef Power-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>REEF Portfolio Tracker</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, #6a0dad, #ff69b4);
+      color: #f2f2f2;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      color: #ffe6fa;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      background-color: #dddddd;
+      color: #333;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      width: 100%;
+      font-size: 1em;
+      background-color: #800080;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #a64ca6;
+    }
+
+    h2 {
+      margin-top: 30px;
+      color: #00ffcc;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 6px;
+    }
+
+    .value {
+      color: #ffff66;
+      font-weight: bold;
+    }
+
+    p {
+      margin: 8px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>REEF Portfolio Tracker</h1>
+
+    <label>
+      REEF Price (USD):
+      <input type="number" step="0.00001" id="reefPrice" value="0.00025">
+    </label>
+
+    <label>
+      Daily REEF Rewards:
+      <input type="number" id="dailyRewards" value="60000">
+    </label>
+
+    <label>
+      Main REEF Holding:
+      <input type="number" id="mainHolding" value="30000000">
+    </label>
+
+    <label>
+      Staked REEF:
+      <input type="number" id="stakedAmount" value="1000000">
+    </label>
+
+    <label>
+      Staking APR (%):
+      <input type="number" step="0.01" id="stakingApr" value="12.5">
+    </label>
+
+    <button onclick="calculate()">Calculate</button>
+
+    <div id="results"></div>
+  </div>
+
+  <script>
+    function formatUSD(v) {
+      return "$" + v.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function calculate() {
+      const price = parseFloat(document.getElementById("reefPrice").value) || 0;
+      const daily = parseFloat(document.getElementById("dailyRewards").value) || 0;
+      const holding = parseFloat(document.getElementById("mainHolding").value) || 0;
+      const staked = parseFloat(document.getElementById("stakedAmount").value) || 0;
+      const apr = parseFloat(document.getElementById("stakingApr").value) || 0;
+
+      const monthly = daily * 30;
+      const yearly = daily * 365;
+      const dailyValue = daily * price;
+      const monthlyValue = monthly * price;
+      const yearlyValue = yearly * price;
+      const mainBagValue = holding * price;
+      const totalValue = mainBagValue + yearlyValue;
+
+      const dailyStakeTokens = staked * (apr / 100) / 365;
+      const monthlyStakeTokens = dailyStakeTokens * 30;
+      const yearlyStakeTokens = staked * (apr / 100);
+      const dailyStakeUSD = dailyStakeTokens * price;
+      const monthlyStakeUSD = monthlyStakeTokens * price;
+      const yearlyStakeUSD = yearlyStakeTokens * price;
+
+      const html = `
+        <h2>📈 Rewards </h2>
+        <p>Daily: <span class="value">${formatUSD(dailyValue)}</span></p>
+        <p>Monthly: <span class="value">${formatUSD(monthlyValue)}</span></p>
+        <p>Yearly: <span class="value">${formatUSD(yearlyValue)}</span></p>
+
+        <h2>💼 Main Holdings</h2>
+        <p>${holding.toLocaleString()} REEF = <span class="value">${formatUSD(mainBagValue)}</span></p>
+
+        <h2>🔒 Staking Rewards</h2>
+        <p>Daily: <span class="value">${dailyStakeTokens.toFixed(2)} REEF</span> = <span class="value">${formatUSD(dailyStakeUSD)}</span></p>
+        <p>Monthly: <span class="value">${monthlyStakeTokens.toFixed(2)} REEF</span> = <span class="value">${formatUSD(monthlyStakeUSD)}</span></p>
+        <p>Yearly: <span class="value">${yearlyStakeTokens.toFixed(2)} REEF</span> = <span class="value">${formatUSD(yearlyStakeUSD)}</span></p>
+
+        <h2>🧾 Total Portfolio</h2>
+        <p>Total Value (Holdings + 1Y Rewards + 1Y Staking): <span class="value">${formatUSD(totalValue + yearlyStakeUSD)}</span></p>
+      `;
+
+      document.getElementById("results").innerHTML = html;
+    }
+
+    calculate(); // Run on page load
+  </script>
+</body>
+</html>
